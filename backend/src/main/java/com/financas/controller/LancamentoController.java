@@ -3,6 +3,7 @@ package com.financas.controller;
 import com.financas.dto.CategoriaResumoResponse;
 import com.financas.dto.LancamentoRequest;
 import com.financas.dto.LancamentoResponse;
+import com.financas.dto.PagamentoRequest;
 import com.financas.dto.ResumoResponse;
 import com.financas.model.TipoLancamento;
 import com.financas.service.LancamentoService;
@@ -10,8 +11,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,10 +40,21 @@ public class LancamentoController {
         return service.listar(tipo, mes);
     }
 
+    /** Retorna lista porque {@code repetirMeses} pode criar vários lançamentos. */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LancamentoResponse criar(@Valid @RequestBody LancamentoRequest request) {
+    public List<LancamentoResponse> criar(@Valid @RequestBody LancamentoRequest request) {
         return service.criar(request);
+    }
+
+    @PutMapping("/{id}")
+    public LancamentoResponse atualizar(@PathVariable Long id, @Valid @RequestBody LancamentoRequest request) {
+        return service.atualizar(id, request);
+    }
+
+    @PatchMapping("/{id}/pago")
+    public LancamentoResponse marcarPago(@PathVariable Long id, @Valid @RequestBody PagamentoRequest request) {
+        return service.marcarPago(id, request.pago());
     }
 
     @DeleteMapping("/{id}")

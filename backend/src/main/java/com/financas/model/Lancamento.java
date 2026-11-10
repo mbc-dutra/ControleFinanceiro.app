@@ -36,6 +36,18 @@ public class Lancamento {
     @Column(nullable = false)
     private LocalDate data;
 
+    /** true = já pago/recebido (realizado); false = previsto (a pagar / a receber). */
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean pago = true;
+
+    public boolean isPago() {
+        return pago;
+    }
+
+    public void setPago(boolean pago) {
+        this.pago = pago;
+    }
+
     public Long getId() {
         return id;
     }

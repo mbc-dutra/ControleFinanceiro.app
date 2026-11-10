@@ -6,13 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,11 +32,13 @@ class LancamentoControllerTest {
     @Test
     void resumoAceitaMesNoFormatoAnoMes() throws Exception {
         when(service.resumo(YearMonth.of(2026, 11))).thenReturn(new ResumoResponse(
-                new BigDecimal("3000.00"), new BigDecimal("1200.00"), new BigDecimal("1800.00")));
+                new BigDecimal("3000.00"), new BigDecimal("1200.00"), new BigDecimal("1800.00"),
+                new BigDecimal("500.00"), new BigDecimal("300.00"), new BigDecimal("2000.00")));
 
         mvc.perform(get("/api/lancamentos/resumo").param("mes", "2026-11"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.saldo").value(1800.00));
+                .andExpect(jsonPath("$.saldo").value(1800.00))
+                .andExpect(jsonPath("$.saldoPrevisto").value(2000.00));
     }
 
     @Test
@@ -40,5 +46,24 @@ class LancamentoControllerTest {
         mvc.perform(get("/api/lancamentos/resumo").param("mes", "2026-13"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.mensagem").value("Parâmetro 'mes' inválido. Use o formato AAAA-MM, ex.: 2026-11"));
+    }
+
+    @Test
+    void repetirMesesAcimaDe36Retorna400() throws Exception {
+        String corpo = """
+                {"descricao":"Aluguel","tipo":"SAIDA","categoria":"Moradia","valor":1200,
+                 "data":"2026-12-05","repetirMeses":37}""";
+
+        mvc.perform(post("/api/lancamentos").contentType(MediaType.APPLICATION_JSON).content(corpo))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.repetirMeses").value("Repetir deve ser entre 1 e 36 meses"));
+    }
+
+    @Test
+    void marcarComoPago() throws Exception {
+        mvc.perform(patch("/api/lancamentos/5/pago").contentType(MediaType.APPLICATION_JSON).content("{\"pago\":true}"))
+                .andExpect(status().isOk());
+
+        verify(service).marcarPago(5L, true);
     }
 }

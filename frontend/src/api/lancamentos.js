@@ -1,8 +1,6 @@
-import axios from 'axios'
+import { http } from './http'
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
-
-const http = axios.create({ baseURL: API_URL })
+export { API_URL } from './http'
 
 // `mes` no formato AAAA-MM. Omitido = todos os meses.
 
@@ -14,8 +12,19 @@ export async function listarLancamentos(tipo, mes) {
   return data
 }
 
+/** payload pode ter `repetirMeses` (1–36). Retorna a lista de lançamentos criados. */
 export async function criarLancamento(payload) {
   const { data } = await http.post('/lancamentos', payload)
+  return data
+}
+
+export async function atualizarLancamento(id, payload) {
+  const { data } = await http.put(`/lancamentos/${id}`, payload)
+  return data
+}
+
+export async function marcarPago(id, pago) {
+  const { data } = await http.patch(`/lancamentos/${id}/pago`, { pago })
   return data
 }
 

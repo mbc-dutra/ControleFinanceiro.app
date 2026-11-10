@@ -11,6 +11,7 @@ public record LancamentoResponse(
         TipoLancamento tipo,
         String categoria,
         BigDecimal valor,
-        LocalDate data
+        LocalDate data,
+        boolean pago
 ) {
 }

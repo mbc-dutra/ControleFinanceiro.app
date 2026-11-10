@@ -12,10 +12,18 @@ e sair do aperto antes de cair no cheque especial ou no rotativo do cartão.
 
 ## O que já funciona
 
-- Registrar entradas e saídas com descrição, categoria, valor e data
-- Navegar mês a mês (‹ ›) e ver o saldo, total de entradas e de saídas do mês escolhido
-- Gráfico de gastos por categoria, com percentual
-- Filtrar a lista por entradas/saídas e excluir lançamentos
+- **Contas com vencimento:** cada saída tem a data até quando precisa ser paga; as atrasadas
+  aparecem em vermelho
+- **Pago x previsto:** só entra no saldo o que você marcou como pago/recebido. O salário do
+  dia 30 fica como "a receber" até você confirmar que caiu. O card mostra também o saldo
+  previsto para o fim do mês
+- **Previsão dos próximos meses:** lance com "repetir por N meses" (salário, aluguel,
+  assinaturas) e navegue até dezembro, janeiro, fevereiro... Cada mês pode ser corrigido
+  separadamente
+- **Editar** qualquer lançamento (✎) e marcar/desmarcar como pago com um clique no status
+- **Me devem:** parte separada, agrupada por pessoa, com quanto cada uma deve e por quê.
+  Quando a pessoa paga, clique em "Recebi" e o valor entra no seu mês como reembolso
+- Gráfico de gastos por categoria, com percentual, e filtro por entradas/saídas
 
 ## Stack
 
@@ -27,10 +35,10 @@ e sair do aperto antes de cair no cheque especial ou no rotativo do cartão.
 
 ## Como rodar
 
-Pré-requisitos: Java 17, Maven, Node 18+ e Docker.
+Pré-requisitos: Java 17, Maven, Node 18+ e PostgreSQL 16 (instalado no sistema ou via
+`docker compose up -d`) com banco, usuário e senha `financas`.
 
 ```bash
-docker compose up -d                        # banco
 cd backend && mvn spring-boot:run           # API → http://localhost:8080/api
 cd frontend && npm install && npm run dev   # tela → http://localhost:5173
 ```
@@ -41,11 +49,17 @@ Testes do backend (não precisam de banco): `cd backend && mvn test`
 
 | Método | Rota                                         | O que faz                         |
 |--------|----------------------------------------------|-----------------------------------|
-| GET    | `/api/lancamentos?tipo=SAIDA&mes=2026-11`    | Lista (filtros opcionais)         |
-| POST   | `/api/lancamentos`                           | Cria um lançamento                |
+| GET    | `/api/lancamentos?tipo=SAIDA&mes=2026-11`    | Lista por vencimento (filtros opcionais) |
+| POST   | `/api/lancamentos`                           | Cria (aceita `pago` e `repetirMeses` 1–36) |
+| PUT    | `/api/lancamentos/{id}`                      | Edita um lançamento               |
+| PATCH  | `/api/lancamentos/{id}/pago`                 | `{"pago": true}` marca como pago/recebido |
 | DELETE | `/api/lancamentos/{id}`                      | Exclui                            |
-| GET    | `/api/lancamentos/resumo?mes=2026-11`        | Entradas, saídas e saldo          |
+| GET    | `/api/lancamentos/resumo?mes=2026-11`        | Realizado (saldo) + a receber, a pagar e saldo previsto |
 | GET    | `/api/lancamentos/categorias?mes=2026-11`    | Gastos por categoria com %        |
+| GET    | `/api/dividas`                               | "Me devem", agrupado por pessoa   |
+| POST / PUT / DELETE | `/api/dividas[/{id}]`           | Cria, edita, exclui               |
+| POST   | `/api/dividas/{id}/quitar`                   | Marca como paga e cria a entrada de reembolso |
+| POST   | `/api/dividas/{id}/reabrir`                  | Desfaz a quitação                 |
 
 ## Trabalhando com o agente de IA
 

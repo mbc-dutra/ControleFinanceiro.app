@@ -65,3 +65,56 @@ está em UTC — depois das 21h (horário de Brasília) o lançamento caía no d
 Corrigido com `hojeISO()` em `datas.js`.
 
 Próximos passos: migrações com Flyway; editar lançamento (PUT); metas de gasto por categoria.
+
+---
+
+## Prompt 02 — Funcionar como a minha planilha (vencimento, previsão, "me devem")
+
+**Pedido original (do jeito que falei):** "uso uma planilha de Excel e quero as mesmas análises
+no app: gastos do mês com data de vencimento, previsão de dezembro, janeiro, fevereiro...
+corrijo quando muda; quando outras pessoas me devem, anoto o valor no nome delas, separado
+dos meus valores; e se o salário cai dia 30, não faz sentido já somar hoje — deixa como provisão."
+
+**Antes de gerar código, o agente devolveu 3 perguntas de decisão** (cada uma muda o modelo de dados):
+
+| Pergunta | Decisão |
+|---|---|
+| O que tira um lançamento do "previsto"? | Eu marco manualmente (pago/recebido) |
+| Como prever meses futuros? | Opção "repetir por N meses", cada cópia editável |
+| Quando alguém me paga, mexe no meu saldo? | Sim: vira uma entrada "Reembolso" |
+
+**Prompt específico resultante:**
+
+```text
+Contexto: controle-financeiro (leia CLAUDE.md). Hoje todo lançamento conta no saldo,
+mesmo com data futura; não dá para editar; não há controle de dívidas de terceiros.
+
+Tarefa:
+1. Lancamento ganha `pago` (boolean). Resumo do mês passa a ter: entradas, saidas, saldo
+   (só pagos) + aReceber, aPagar, saldoPrevisto. Sem `pago` na criação: data futura = previsto.
+2. POST aceita `repetirMeses` (1–36): cria uma cópia por mês, mesmo dia (31 → último dia).
+3. PUT /api/lancamentos/{id} (editar) e PATCH /api/lancamentos/{id}/pago.
+4. Nova entidade Divida (pessoa, descricao, valor, data, quitada, dataQuitacao, lancamentoId)
+   em /api/dividas, listada agrupada por pessoa (sem diferenciar maiúsculas) com total em aberto.
+   POST /{id}/quitar cria ENTRADA "Reembolso" hoje; POST /{id}/reabrir desfaz e apaga a entrada.
+5. Front: campo "Vencimento" + "Já paguei"; "Repetir por N meses"; status clicável na lista
+   (Pago / A pagar / Atrasado); botão editar; seção "Me devem" separada.
+
+Restrições: "hoje" via bean Clock (testável); dinheiro em BigDecimal; não quebrar o filtro `mes`;
+testes unitários com Mockito para cada regra nova.
+
+Exemplo (hoje = 10/11/2026):
+  POST {Salário, ENTRADA, 3000, data 2026-11-30, repetirMeses 3}
+  → 3 lançamentos (30/11, 30/12, 30/01), todos pago=false
+  GET /resumo?mes=2026-11 → saldo não muda; aReceber = 3000; saldoPrevisto = saldo + 3000
+  Dívida "João — Pizza 50" → quitar → aparece ENTRADA "João — Pizza" 50,00 em 10/11, pago=true
+
+Formato de saída: lista de arquivos (1 linha cada), código, resultado dos testes,
+teste manual ponta a ponta contra o banco, e o que ficou de fora (máx. 3 itens).
+```
+
+**Resultado:** `mvn test` → **17 testes, 0 falhas**; teste ponta a ponta contra o Postgres
+local com registros "TESTE", todos apagados no final.
+
+Ficou de fora: pagamento parcial de dívida; editar todas as cópias repetidas de uma vez;
+alerta de contas vencendo nos próximos dias.
