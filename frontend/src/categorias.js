@@ -8,6 +8,6 @@ export const COR_CATEGORIA = {
   Transporte: '#cbb02a',
   Saúde: '#2aa198',
   Lazer: '#8a4fae',
-  Educação: '#6e1423',
+  Educação: '#c2588f',
   Outros: '#7d8590'
 }

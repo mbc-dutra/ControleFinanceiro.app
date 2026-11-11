@@ -10,6 +10,7 @@ public record LancamentoResponse(
         String descricao,
         TipoLancamento tipo,
         String categoria,
+        String instituicao,
         BigDecimal valor,
         LocalDate data,
         boolean pago

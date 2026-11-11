@@ -108,6 +108,19 @@ class LancamentoServiceTest {
     }
 
     @Test
+    void instituicaoVaiParaTodasAsCopiasEEmBrancoViraNenhuma() {
+        devolverOQueSalvar();
+
+        List<LancamentoResponse> comInstituicao = service.criar(new LancamentoRequest("Fatura", TipoLancamento.SAIDA,
+                "Contas", " Nubank ", new BigDecimal("300.00"), LocalDate.of(2026, 12, 10), null, 3));
+        List<LancamentoResponse> emBranco = service.criar(new LancamentoRequest("Luz", TipoLancamento.SAIDA,
+                "Contas", "  ", new BigDecimal("90.00"), LocalDate.of(2026, 12, 10), null, null));
+
+        assertThat(comInstituicao).extracting(LancamentoResponse::instituicao).containsOnly("Nubank").hasSize(3);
+        assertThat(emBranco.get(0).instituicao()).isNull();
+    }
+
+    @Test
     void repetirAPartirDeHojeMarcaSoOPrimeiroComoPago() {
         devolverOQueSalvar();
 
@@ -137,7 +150,7 @@ class LancamentoServiceTest {
         when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         LancamentoResponse resposta = service.atualizar(3L, new LancamentoRequest(
-                "Luz", TipoLancamento.SAIDA, "Contas", new BigDecimal("230.00"), LocalDate.of(2026, 11, 25), null, null));
+                "Luz", TipoLancamento.SAIDA, "Contas", null, new BigDecimal("230.00"), LocalDate.of(2026, 11, 25), null, null));
 
         assertThat(resposta.valor()).isEqualByComparingTo("230.00");
         assertThat(resposta.pago()).isTrue();
@@ -173,7 +186,7 @@ class LancamentoServiceTest {
     }
 
     private static LancamentoRequest request(String data, Boolean pago, Integer repetirMeses) {
-        return new LancamentoRequest("Salário", TipoLancamento.ENTRADA, "Renda",
+        return new LancamentoRequest("Salário", TipoLancamento.ENTRADA, "Renda", null,
                 new BigDecimal("3000.00"), LocalDate.parse(data), pago, repetirMeses);
     }
 

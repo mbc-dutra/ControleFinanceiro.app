@@ -10,6 +10,7 @@ function estadoInicial(lancamento, mes) {
       tipo: lancamento.tipo,
       descricao: lancamento.descricao,
       categoria: lancamento.categoria,
+      instituicao: lancamento.instituicao ?? '',
       valor: String(lancamento.valor),
       data: lancamento.data,
       pago: lancamento.pago,
@@ -23,6 +24,7 @@ function estadoInicial(lancamento, mes) {
     tipo: 'SAIDA',
     descricao: '',
     categoria: CATEGORIAS_SAIDA[0],
+    instituicao: '',
     valor: '',
     data,
     pago: data <= hoje,
@@ -34,7 +36,7 @@ function estadoInicial(lancamento, mes) {
  * Cria (com opção de repetir por N meses) ou edita um lançamento.
  * Se `editando` mudar, o componente pai deve trocar a `key` para reiniciar o formulário.
  */
-export default function FormLancamento({ editando, mes, onSalvar, onCancelar }) {
+export default function FormLancamento({ editando, mes, instituicoesConhecidas = [], onSalvar, onCancelar }) {
   const [form, setForm] = useState(() => estadoInicial(editando, mes))
   // Enquanto o usuário não mexer no "já paguei", ele acompanha a data automaticamente.
   const [pagoTocado, setPagoTocado] = useState(Boolean(editando))
@@ -66,6 +68,7 @@ export default function FormLancamento({ editando, mes, onSalvar, onCancelar }) 
       descricao: form.descricao.trim(),
       tipo: form.tipo,
       categoria: form.categoria,
+      instituicao: form.instituicao.trim() || null,
       valor,
       data: form.data,
       pago: form.pago,
@@ -125,6 +128,21 @@ export default function FormLancamento({ editando, mes, onSalvar, onCancelar }) 
           <select id="categoria" value={form.categoria} onChange={e => alterar('categoria', e.target.value)}>
             {categorias.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
+        </div>
+
+        <div className="campo">
+          <label htmlFor="instituicao">Instituição</label>
+          <input
+            id="instituicao"
+            list="instituicoes-conhecidas"
+            value={form.instituicao}
+            onChange={e => alterar('instituicao', e.target.value)}
+            placeholder={saida ? 'Ex.: Nubank, cartão Inter...' : 'Ex.: Nubank, Caixa...'}
+            maxLength={40}
+          />
+          <datalist id="instituicoes-conhecidas">
+            {instituicoesConhecidas.map(i => <option key={i} value={i} />)}
+          </datalist>
         </div>
 
         <div className="campo campo-valor">

@@ -39,13 +39,16 @@ export default function ListaLancamentos({
             return (
               <li key={item.id} className={[item.pago ? '' : 'previsto', item.id === editandoId ? 'editando' : ''].join(' ')}>
                 <span className="l-data" title={saida ? 'Vencimento' : 'Data prevista'}>{formatarData(item.data)}</span>
-                <span className="l-desc">{item.descricao}</span>
+                <span className="l-desc">
+                  {item.descricao}
+                  {item.instituicao && <small className="l-inst" title="Instituição">{item.instituicao}</small>}
+                </span>
                 <span
                   className="l-cat"
                   style={
                     saida
                       ? { background: `${cor}26`, color: cor, borderColor: `${cor}66` }
-                      : { background: 'var(--wine-soft)', color: 'var(--wine-light)' }
+                      : { background: 'var(--blue-soft)', color: 'var(--blue-light)' }
                   }
                 >
                   {item.categoria}

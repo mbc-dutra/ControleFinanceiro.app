@@ -146,6 +146,8 @@ public class LancamentoService {
         lancamento.setDescricao(request.descricao().trim());
         lancamento.setTipo(request.tipo());
         lancamento.setCategoria(request.categoria());
+        lancamento.setInstituicao(request.instituicao() == null || request.instituicao().isBlank()
+                ? null : request.instituicao().trim());
         lancamento.setValor(request.valor());
         lancamento.setData(data);
     }
@@ -163,6 +165,7 @@ public class LancamentoService {
                 lancamento.getDescricao(),
                 lancamento.getTipo(),
                 lancamento.getCategoria(),
+                lancamento.getInstituicao(),
                 lancamento.getValor(),
                 lancamento.getData(),
                 lancamento.isPago());

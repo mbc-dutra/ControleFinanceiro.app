@@ -86,6 +86,12 @@ export default function App() {
     recarregar()
   }
 
+  // Sugestões do campo Instituição: as já usadas nos lançamentos do mês (sem repetir por maiúsculas).
+  const instituicoesConhecidas = [...new Map(lancamentos
+    .map(l => l.instituicao)
+    .filter(Boolean)
+    .map(i => [i.toLowerCase(), i])).values()]
+
   return (
     <div className="app">
       <header className="masthead">
@@ -101,6 +107,7 @@ export default function App() {
         key={editando ? `editar-${editando.id}` : `novo-${mes}`}
         editando={editando}
         mes={mes}
+        instituicoesConhecidas={instituicoesConhecidas}
         onSalvar={handleSalvar}
         onCancelar={() => setEditando(null)}
       />

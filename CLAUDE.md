@@ -24,8 +24,15 @@ enquanto). Moeda única: BRL.
   é: data futura = previsto. `data` é o vencimento (saída) ou a data prevista (entrada).
 - **Repetir**: `repetirMeses` cria cópias independentes (sem vínculo entre elas); editar uma
   não altera as outras — é assim que o usuário corrige a previsão mês a mês.
-- **"Me devem" (`Divida`) fica fora do saldo.** Só ao quitar vira uma `ENTRADA` categoria
-  `Reembolso` com data de hoje (`lancamentoId` guarda o vínculo; reabrir apaga essa entrada).
+- **"Me devem" (`Divida`) fica fora do saldo.** Agrupado por pessoa → `TipoDivida` → instituição
+  (`banco`, texto livre; na tela aparece como "Instituição"). Dois tipos (`tipo` nulo = `DEBITO`):
+  - `DEBITO` (dinheiro do usuário): ao quitar vira uma `ENTRADA` categoria `Reembolso` com data
+    de hoje (`lancamentoId` guarda o vínculo; reabrir apaga essa entrada).
+  - `CREDITO` (cartão, crédito, empréstimo): "recebi" (`dataRecebimento`) e "paguei a instituição"
+    (`dataPagamento`) são marcados à parte e **nunca** criam lançamento; com os dois, fica quitada.
+  - `data` da dívida é o **vencimento**. `parcelas` (só na criação) cria uma dívida por mês,
+    "descrição (i/N)", independentes entre si (mesma ideia do `repetirMeses`).
+  - Dívida em aberto aparece sempre, em qualquer mês, até ser marcada (não filtra por `mes`).
 - "Hoje" no backend vem do bean `Clock` (testes usam `Clock.fixed`) — não use `LocalDate.now()` sem ele.
 - **Datas no front sempre em fuso local** — use `src/datas.js`; não use `toISOString()` para "hoje".
 - Erros da API saem como JSON: validação → `{campo: mensagem}`; demais → `{"mensagem": "..."}`

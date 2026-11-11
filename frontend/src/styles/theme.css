@@ -1,28 +1,29 @@
 :root {
   color-scheme: dark;
 
-  /* base */
-  --bg: #0e0a0b;
-  --surface: #1a1215;
-  --surface-2: #221619;
-  --border: #3a1f24;
+  /* base (neutros frios, puxando para o azul) */
+  --bg: #0a0d14;
+  --surface: #121722;
+  --surface-2: #19202e;
+  --border: #263049;
 
   /* texto */
-  --text: #f3e9ea;
-  --text-muted: #b08e93;
-  --text-faint: #7c5b60;
+  --text: #e8edf5;
+  --text-muted: #94a0b8;
+  --text-faint: #5f6b82;
 
-  /* vermelho vivo (ação, destaque, saídas) */
-  --red: #e0293f;
-  --red-dark: #b81f31;
-  --red-soft: rgba(224, 41, 63, 0.14);
+  /* azul (identidade: ações, destaques, estrutura) */
+  --blue: #3b82f6;
+  --blue-dark: #2563eb;
+  --blue-light: #7aa7f7;
+  --blue-soft: rgba(59, 130, 246, 0.16);
 
-  /* vinho (estrutura, cabeçalhos, categorias) */
-  --wine: #6e1423;
-  --wine-light: #b85469;
-  --wine-soft: rgba(110, 20, 35, 0.28);
+  /* vermelho (saídas, atrasos, erros) */
+  --red: #e5484d;
+  --red-dark: #b9333a;
+  --red-soft: rgba(229, 72, 77, 0.14);
 
-  /* verde (entradas) — único tom fora da família vermelha, para não se confundir com saída */
+  /* verde (entradas) */
   --green: #35c46a;
   --green-soft: rgba(53, 196, 106, 0.14);
 

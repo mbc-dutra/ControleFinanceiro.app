@@ -8,7 +8,7 @@
 }
 
 .masthead {
-  border-bottom: 2px solid var(--wine);
+  border-bottom: 2px solid var(--blue);
   padding-bottom: 16px;
   display: flex;
   align-items: baseline;
@@ -75,10 +75,10 @@
 }
 
 .tile-saldo {
-  border-color: var(--red);
-  background: linear-gradient(180deg, var(--red-soft), var(--surface) 70%);
+  border-color: var(--text-faint);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface) 70%);
 }
-.tile-saldo .tile-valor { color: var(--red); }
+.tile-saldo .tile-valor { color: var(--text); }
 
 .tile-entradas .tile-valor { color: var(--green); }
 .tile-saidas .tile-valor { color: var(--red); }
@@ -103,7 +103,7 @@
   text-transform: uppercase;
   margin: 0;
   color: var(--text);
-  border-left: 3px solid var(--wine);
+  border-left: 3px solid var(--blue);
   padding-left: 10px;
 }
 
@@ -150,7 +150,7 @@
 .campo input:focus,
 .campo select:focus,
 button:focus-visible {
-  outline: 2px solid var(--red);
+  outline: 2px solid var(--blue);
   outline-offset: 1px;
 }
 
@@ -179,19 +179,21 @@ button:focus-visible {
 
 .tipo-toggle button.ativo.saida { background: var(--red-soft); color: var(--red); }
 .tipo-toggle button.ativo.entrada { background: var(--green-soft); color: var(--green); }
+.tipo-toggle button.ativo.credito { background: var(--blue-soft); color: var(--blue-light); }
+.tipo-toggle button.ativo.debito { background: var(--green-soft); color: var(--green); }
 
 .botao-primario {
   font: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  background: var(--red);
-  color: #120a0b;
+  background: var(--blue);
+  color: #fff;
   border: none;
   border-radius: 7px;
   padding: 10px 20px;
 }
-.botao-primario:hover { background: var(--red-dark); color: var(--text); }
+.botao-primario:hover { background: var(--blue-dark); }
 .botao-primario:disabled { opacity: 0.6; cursor: default; }
 
 .erro-form { font-size: 12.5px; color: var(--red); margin: 0; }
@@ -241,7 +243,7 @@ button:focus-visible {
   cursor: pointer;
 }
 
-.chip.ativo { background: var(--wine); color: var(--text); border-color: var(--wine); }
+.chip.ativo { background: var(--blue); color: var(--text); border-color: var(--blue); }
 
 /* lista de lancamentos */
 .lista-lancamentos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
@@ -258,6 +260,14 @@ button:focus-visible {
 
 .l-data { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); font-variant-numeric: tabular-nums; }
 .l-desc { font-size: 14px; color: var(--text); }
+.l-inst {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+}
 
 .l-cat {
   font-size: 11px;
@@ -324,7 +334,7 @@ button:focus-visible {
 }
 
 .seletor-mes button:hover {
-  border-color: var(--wine-light);
+  border-color: var(--blue-light);
 }
 
 .seletor-mes-nome {
@@ -341,7 +351,7 @@ button:focus-visible {
 
 /* ---------- cabeçalho de painel com ação ---------- */
 .painel-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.painel-editando { border-color: var(--wine-light); }
+.painel-editando { border-color: var(--blue-light); }
 
 .botao-secundario {
   font: inherit;
@@ -354,7 +364,7 @@ button:focus-visible {
   border-radius: 7px;
   padding: 9px 14px;
 }
-.botao-secundario:hover { color: var(--text); border-color: var(--wine-light); }
+.botao-secundario:hover { color: var(--text); border-color: var(--blue-light); }
 
 .campo-check {
   display: flex;
@@ -372,7 +382,7 @@ button:focus-visible {
 /* ---------- lista: status e ações ---------- */
 .lista-lancamentos li.previsto .l-desc,
 .lista-lancamentos li.previsto .l-valor { opacity: 0.7; }
-.lista-lancamentos li.editando { background: var(--wine-soft); border-radius: 6px; }
+.lista-lancamentos li.editando { background: var(--blue-soft); border-radius: 6px; }
 
 .l-status {
   font: inherit;
@@ -390,6 +400,8 @@ button:focus-visible {
 .l-status.ok { border-style: solid; border-color: transparent; background: var(--green-soft); color: var(--green); }
 .l-status.atrasado { border-style: solid; border-color: var(--red-dark); background: var(--red-soft); color: var(--red); }
 .l-status:hover { filter: brightness(1.2); }
+.pessoa-dividas .l-status { margin-right: 4px; }
+.l-data.vencida { color: var(--red); font-weight: 600; }
 
 .l-acoes { display: flex; justify-content: flex-end; align-items: center; gap: 2px; }
 
@@ -411,6 +423,7 @@ button:focus-visible {
 .painel-devem h2 { border-left-color: var(--green); }
 .total-devem { font-size: 13px; color: var(--text-muted); }
 .total-devem strong { font-family: var(--font-mono); color: var(--green); }
+.total-devem strong.a-pagar { color: var(--blue-light); }
 
 .pessoas { display: flex; flex-direction: column; gap: 12px; }
 
@@ -426,6 +439,43 @@ button:focus-visible {
 .pessoa-nome { font-weight: 600; font-size: 14.5px; }
 .pessoa-total { font-family: var(--font-mono); font-weight: 600; color: var(--green); font-variant-numeric: tabular-nums; }
 
+.pessoa-tipo + .pessoa-tipo { border-top: 1px solid var(--border); }
+.tipo-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px 0;
+}
+.tipo-nome {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.tipo-credito .tipo-nome { background: var(--blue-soft); color: var(--blue-light); }
+.tipo-debito .tipo-nome { background: var(--green-soft); color: var(--green); }
+.tipo-totais { font-family: var(--font-mono); font-size: 13px; color: var(--text); font-variant-numeric: tabular-nums; }
+.tipo-totais small { color: var(--text-muted); }
+
+.pessoa-banco + .pessoa-banco { border-top: 1px solid var(--border); }
+.banco-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 14px 2px;
+}
+.banco-nome {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+}
+.banco-total { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
 .pessoa-dividas { list-style: none; margin: 0; padding: 0 10px; }
 .pessoa-dividas li {
   display: grid;
@@ -440,21 +490,6 @@ button:focus-visible {
 .pessoa-dividas li.quitada .l-desc { text-decoration: line-through; }
 .pessoa-dividas small { color: var(--text-faint); text-decoration: none; display: inline-block; }
 
-.botao-mini {
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: none;
-  color: var(--text-muted);
-  margin-right: 4px;
-}
-.botao-mini.ok { border-color: transparent; background: var(--green-soft); color: var(--green); }
-.botao-mini:hover { filter: brightness(1.2); }
-
 .link {
   align-self: flex-start;
   background: none;
@@ -462,7 +497,7 @@ button:focus-visible {
   padding: 0;
   font: inherit;
   font-size: 13px;
-  color: var(--wine-light);
+  color: var(--blue-light);
   cursor: pointer;
   text-decoration: underline;
 }

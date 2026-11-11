@@ -35,7 +35,7 @@ public class DividaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DividaResponse criar(@Valid @RequestBody DividaRequest request) {
+    public List<DividaResponse> criar(@Valid @RequestBody DividaRequest request) {
         return service.criar(request);
     }
 
@@ -50,7 +50,7 @@ public class DividaController {
         service.excluir(id);
     }
 
-    /** Marca como paga e cria a entrada correspondente no controle do usuário. */
+    /** Débito: marca como paga e cria a entrada correspondente no controle do usuário. */
     @PostMapping("/{id}/quitar")
     public DividaResponse quitar(@PathVariable Long id) {
         return service.quitar(id);
@@ -59,5 +59,27 @@ public class DividaController {
     @PostMapping("/{id}/reabrir")
     public DividaResponse reabrir(@PathVariable Long id) {
         return service.reabrir(id);
+    }
+
+    /** Crédito: a pessoa pagou o usuário (não mexe no saldo). */
+    @PostMapping("/{id}/receber")
+    public DividaResponse receber(@PathVariable Long id) {
+        return service.receber(id);
+    }
+
+    @PostMapping("/{id}/desfazer-recebimento")
+    public DividaResponse desfazerRecebimento(@PathVariable Long id) {
+        return service.desfazerRecebimento(id);
+    }
+
+    /** Crédito: o usuário pagou a instituição (não mexe no saldo). */
+    @PostMapping("/{id}/pagar")
+    public DividaResponse pagar(@PathVariable Long id) {
+        return service.pagar(id);
+    }
+
+    @PostMapping("/{id}/desfazer-pagamento")
+    public DividaResponse desfazerPagamento(@PathVariable Long id) {
+        return service.desfazerPagamento(id);
     }
 }

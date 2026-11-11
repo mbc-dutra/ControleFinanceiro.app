@@ -30,6 +30,10 @@ public class Lancamento {
     @Column(nullable = false)
     private String categoria;
 
+    /** Banco/cartão/conta de onde saiu ou para onde entrou (texto livre, opcional). */
+    @Column(length = 40)
+    private String instituicao;
+
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal valor;
 
@@ -78,6 +82,14 @@ public class Lancamento {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getInstituicao() {
+        return instituicao;
+    }
+
+    public void setInstituicao(String instituicao) {
+        this.instituicao = instituicao;
     }
 
     public BigDecimal getValor() {
